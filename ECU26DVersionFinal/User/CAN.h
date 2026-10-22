@@ -1,0 +1,13 @@
+#ifndef __CAN_H
+#define __CAN_H
+#include "stm32f10x.h"
+
+#define CAN_TX_Pin  		GPIO_Pin_12
+#define CAN_RX_Pin  		GPIO_Pin_11
+#define CAN_PORT			GPIOA
+#define CAN_GPIO_CLK		RCC_APB2Periph_GPIOA
+
+void CAN_Config(void);
+uint8_t CAN_Send(CanTxMsg txmsg);
+
+#endif
