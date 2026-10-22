@@ -1,62 +1,62 @@
-#include "USART.h"                  // Device header
+ï»¿#include "USART.h"                  // Device header
 
-uint8_t Serial_RxData;		//¶¨Òå´®¿Ú½ÓÊÕµÄÊı¾İ±äÁ¿
-uint8_t Serial_RxFlag;		//¶¨Òå´®¿Ú½ÓÊÕµÄ±êÖ¾Î»±äÁ¿
+uint8_t Serial_RxData;		//å®šä¹‰ä¸²å£æ¥æ”¶çš„æ•°æ®å˜é‡
+uint8_t Serial_RxFlag;		//å®šä¹‰ä¸²å£æ¥æ”¶çš„æ ‡å¿—ä½å˜é‡
 
-volatile uint8_t Serial_SBUSFrame[25];	//SBUSÍêÕûÖ¡»º³åÇø£¨0x0F¿ªÍ·£¬0x00½áÎ²£¬¹²25×Ö½Ú£©
-volatile uint8_t Serial_SBUSFrameIndex;	//SBUSÖ¡½ÓÊÕË÷Òı
-volatile uint8_t Serial_SBUSFrameFlag;	//SBUSÍêÕûÖ¡±êÖ¾Î»
+volatile uint8_t Serial_SBUSFrame[25];	//SBUSå®Œæ•´å¸§ç¼“å†²åŒºï¼ˆ0x0Få¼€å¤´ï¼Œ0x00ç»“å°¾ï¼Œå…±25å­—èŠ‚ï¼‰
+volatile uint8_t Serial_SBUSFrameIndex;	//SBUSå¸§æ¥æ”¶ç´¢å¼•
+volatile uint8_t Serial_SBUSFrameFlag;	//SBUSå®Œæ•´å¸§æ ‡å¿—ä½
 
 #include "stm32f10x.h"
 
 void Serial_Init(void)
 {
-	// 1. ¿ªÆô¶ÔÓ¦Ê±ÖÓ
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);   // PB10 PB11Ê±ÖÓ
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);  // USART3ÔÚAPB1×ÜÏß
+	// 1. å¼€å¯å¯¹åº”æ—¶é’Ÿ
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);   // PB10 PB11æ—¶é’Ÿ
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);  // USART3åœ¨APB1æ€»çº¿
 
-	// 2. GPIO³õÊ¼»¯ PB11 = USART3_RX ¸´ÓÃÊäÈë
+	// 2. GPIOåˆå§‹åŒ– PB11 = USART3_RX å¤ç”¨è¾“å…¥
 	GPIO_InitTypeDef GPIO_InitStructure;
 	// PB11 RX
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;  // ´®¿ÚRX¸´ÓÃÊäÈë
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;  // ä¸²å£RXå¤ç”¨è¾“å…¥
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	// 3. USART3 SBUS²ÎÊıÅäÖÃ£¨ÄãÔ­ÓĞ²ÎÊı±£Áô£¬ÍâÉè¸ÄÎªUSART3£©
+	// 3. USART3 SBUSå‚æ•°é…ç½®ï¼ˆä½ åŸæœ‰å‚æ•°ä¿ç•™ï¼Œå¤–è®¾æ”¹ä¸ºUSART3ï¼‰
 	USART_InitTypeDef USART_InitStructure;
 	USART_InitStructure.USART_BaudRate = 100000;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Rx;        // ½ö½ÓÊÕ
-	USART_InitStructure.USART_Parity = USART_Parity_Even;  // Å¼Ğ£Ñé
-	USART_InitStructure.USART_StopBits = USART_StopBits_2;  // 2Í£Ö¹Î»
-	USART_InitStructure.USART_WordLength = USART_WordLength_9b; //9Î»Êı¾İ
+	USART_InitStructure.USART_Mode = USART_Mode_Rx;        // ä»…æ¥æ”¶
+	USART_InitStructure.USART_Parity = USART_Parity_Even;  // å¶æ ¡éªŒ
+	USART_InitStructure.USART_StopBits = USART_StopBits_2;  // 2åœæ­¢ä½
+	USART_InitStructure.USART_WordLength = USART_WordLength_9b; //9ä½æ•°æ®
 	USART_Init(USART3, &USART_InitStructure);
 
-	// 4. ¿ªÆôUSART3½ÓÊÕÖĞ¶Ï
+	// 4. å¼€å¯USART3æ¥æ”¶ä¸­æ–­
 	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
 
-	// 5. NVICÅäÖÃ USART3ÖĞ¶ÏÍ¨µÀ£¨ÓëCAN/TIME±£³ÖGroup_0£©
+	// 5. NVICé…ç½® USART3ä¸­æ–­é€šé“ï¼ˆä¸CAN/TIMEä¿æŒGroup_0ï¼‰
 	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;      // ¹Ø¼ü£ºUSART3ÖĞ¶ÏÏòÁ¿
+	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;      // å…³é”®ï¼šUSART3ä¸­æ–­å‘é‡
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_Init(&NVIC_InitStructure);
 
-	// 6. Ê¹ÄÜUSART3ÍâÉè
+	// 6. ä½¿èƒ½USART3å¤–è®¾
 	USART_Cmd(USART3, ENABLE);
 }
 
 /**
-  * º¯    Êı£º»ñÈ¡Ò»Ö¡ÍêÕûµÄSBUSÊı¾İ
-  * ²Î    Êı£ºFrame ´æ·Å25×Ö½ÚSBUSÖ¡µÄÊı×éÊ×µØÖ·
-  * ·µ »Ø Öµ£º1=ÒÑ»ñÈ¡µ½ĞÂµÄÒ»Ö¡£¬0=ÔİÎŞĞÂÖ¡
+  * å‡½    æ•°ï¼šè·å–ä¸€å¸§å®Œæ•´çš„SBUSæ•°æ®
+  * å‚    æ•°ï¼šFrame å­˜æ”¾25å­—èŠ‚SBUSå¸§çš„æ•°ç»„é¦–åœ°å€
+  * è¿” å› å€¼ï¼š1=å·²è·å–åˆ°æ–°çš„ä¸€å¸§ï¼Œ0=æš‚æ— æ–°å¸§
   */
 uint8_t Serial_GetSBUSFrame(uint8_t *Frame)
 {
-	if (Serial_SBUSFrameFlag == 1)		//Èç¹û±êÖ¾Î»Îª1
+	if (Serial_SBUSFrameFlag == 1)		//å¦‚æœæ ‡å¿—ä½ä¸º1
 	{
-		USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);	//¿½±´ÆÚ¼äËø×¡½ÓÊÕ»º³å
+		USART_ITConfig(USART3, USART_IT_RXNE, DISABLE);	//æ‹·è´æœŸé—´é”ä½æ¥æ”¶ç¼“å†²
 		Serial_SBUSFrameFlag = 0;
 		uint8_t i;
 		for(i = 0; i < 25; i++)
@@ -64,92 +64,92 @@ uint8_t Serial_GetSBUSFrame(uint8_t *Frame)
 			Frame[i] = Serial_SBUSFrame[i];
 		}
 		USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
-		return 1;						//·µ»Ø1£¬²¢×Ô¶¯ÇåÁã±êÖ¾Î»
+		return 1;						//è¿”å›1ï¼Œå¹¶è‡ªåŠ¨æ¸…é›¶æ ‡å¿—ä½
 	}
-	return 0;							//Èç¹û±êÖ¾Î»Îª0£¬Ôò·µ»Ø0
+	return 0;							//å¦‚æœæ ‡å¿—ä½ä¸º0ï¼Œåˆ™è¿”å›0
 }
 
 
 /**
-  * º¯    Êı£ºUSART1ÖĞ¶Ïº¯Êı
-  * ²Î    Êı£ºÎŞ
-  * ·µ »Ø Öµ£ºÎŞ
-  * ×¢ÒâÊÂÏî£º´Ëº¯ÊıÎªÖĞ¶Ïº¯Êı£¬ÎŞĞèµ÷ÓÃ£¬ÖĞ¶Ï´¥·¢ºó×Ô¶¯Ö´ĞĞ
-  *           º¯ÊıÃûÎªÔ¤ÁôµÄÖ¸¶¨Ãû³Æ£¬¿ÉÒÔ´ÓÆô¶¯ÎÄ¼ş¸´ÖÆ
-  *           ÇëÈ·±£º¯ÊıÃûÕıÈ·£¬²»ÄÜÓĞÈÎºÎ²îÒì£¬·ñÔòÖĞ¶Ïº¯Êı½«²»ÄÜ½øÈë
+  * å‡½    æ•°ï¼šUSART1ä¸­æ–­å‡½æ•°
+  * å‚    æ•°ï¼šæ— 
+  * è¿” å› å€¼ï¼šæ— 
+  * æ³¨æ„äº‹é¡¹ï¼šæ­¤å‡½æ•°ä¸ºä¸­æ–­å‡½æ•°ï¼Œæ— éœ€è°ƒç”¨ï¼Œä¸­æ–­è§¦å‘åè‡ªåŠ¨æ‰§è¡Œ
+  *           å‡½æ•°åä¸ºé¢„ç•™çš„æŒ‡å®šåç§°ï¼Œå¯ä»¥ä»å¯åŠ¨æ–‡ä»¶å¤åˆ¶
+  *           è¯·ç¡®ä¿å‡½æ•°åæ­£ç¡®ï¼Œä¸èƒ½æœ‰ä»»ä½•å·®å¼‚ï¼Œå¦åˆ™ä¸­æ–­å‡½æ•°å°†ä¸èƒ½è¿›å…¥
   */
 void USART3_IRQHandler(void)
 {
-	if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)		//ÅĞ¶ÏÊÇ·ñÊÇUSART1µÄ½ÓÊÕÊÂ¼ş´¥·¢µÄÖĞ¶Ï
+	if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)		//åˆ¤æ–­æ˜¯å¦æ˜¯USART1çš„æ¥æ”¶äº‹ä»¶è§¦å‘çš„ä¸­æ–­
 	{
-		uint8_t Data = USART_ReceiveData(USART3);				//¶ÁÈ¡Êı¾İ¼Ä´æÆ÷
-		Serial_RxData = Data;									//´æ·ÅÔÚ½ÓÊÕµÄÊı¾İ±äÁ¿
-		Serial_RxFlag = 1;										//ÖÃ½ÓÊÕ±êÖ¾Î»±äÁ¿Îª1
+		uint8_t Data = USART_ReceiveData(USART3);				//è¯»å–æ•°æ®å¯„å­˜å™¨
+		Serial_RxData = Data;									//å­˜æ”¾åœ¨æ¥æ”¶çš„æ•°æ®å˜é‡
+		Serial_RxFlag = 1;										//ç½®æ¥æ”¶æ ‡å¿—ä½å˜é‡ä¸º1
 
-		/*SBUSÖ¡×é×°£ºÖ¡Í·0x0F£¬Ö¡Î²0x00£¬¹²25×Ö½Ú*/
-		if (Serial_SBUSFrameIndex == 0)							//µÈ´ıÖ¡Í·
+		/*SBUSå¸§ç»„è£…ï¼šå¸§å¤´0x0Fï¼Œå¸§å°¾0x00ï¼Œå…±25å­—èŠ‚*/
+		if (Serial_SBUSFrameIndex == 0)							//ç­‰å¾…å¸§å¤´
 		{
-			if (Data == 0x0F)									//ÊÇÖ¡Í·Ôò¿ªÊ¼ÊÕÖ¡
+			if (Data == 0x0F)									//æ˜¯å¸§å¤´åˆ™å¼€å§‹æ”¶å¸§
 			{
 				Serial_SBUSFrame[0] = Data;
 				Serial_SBUSFrameIndex = 1;
 			}
 		}
-		else if (Serial_SBUSFrameIndex < 25)					//ÊÕÖ¡ÖĞ
+		else if (Serial_SBUSFrameIndex < 25)					//æ”¶å¸§ä¸­
 		{
 			Serial_SBUSFrame[Serial_SBUSFrameIndex] = Data;
 			Serial_SBUSFrameIndex++;
-			if (Serial_SBUSFrameIndex == 25)					//ÊÕÂú25×Ö½Ú
+			if (Serial_SBUSFrameIndex == 25)					//æ”¶æ»¡25å­—èŠ‚
 			{
-				if (Data == 0x00)								//Ğ£ÑéÖ¡Î²
+				if (Data == 0x00)								//æ ¡éªŒå¸§å°¾
 				{
-					Serial_SBUSFrameFlag = 1;					//ÖÃÍêÕûÖ¡±êÖ¾Î»
+					Serial_SBUSFrameFlag = 1;					//ç½®å®Œæ•´å¸§æ ‡å¿—ä½
 				}
-				Serial_SBUSFrameIndex = 0;						//ÖØĞÂ¿ªÊ¼ÕÒÖ¡Í·
+				Serial_SBUSFrameIndex = 0;						//é‡æ–°å¼€å§‹æ‰¾å¸§å¤´
 			}
 		}
-		USART_ClearITPendingBit(USART3, USART_IT_RXNE);			//Çå³ıUSART1µÄRXNE±êÖ¾Î»
-																//¶ÁÈ¡Êı¾İ¼Ä´æÆ÷»á×Ô¶¯Çå³ı´Ë±êÖ¾Î»
-																//Èç¹ûÒÑ¾­¶ÁÈ¡ÁËÊı¾İ¼Ä´æÆ÷£¬Ò²¿ÉÒÔ²»Ö´ĞĞ´Ë´úÂë
+		USART_ClearITPendingBit(USART3, USART_IT_RXNE);			//æ¸…é™¤USART1çš„RXNEæ ‡å¿—ä½
+																//è¯»å–æ•°æ®å¯„å­˜å™¨ä¼šè‡ªåŠ¨æ¸…é™¤æ­¤æ ‡å¿—ä½
+																//å¦‚æœå·²ç»è¯»å–äº†æ•°æ®å¯„å­˜å™¨ï¼Œä¹Ÿå¯ä»¥ä¸æ‰§è¡Œæ­¤ä»£ç 
 	}
 }
 
 
-/* ============================ ÅäÖÃ ============================ */
-// 6C-MINI£¨ÓÒÊÖÓÍÃÅÄ£Ê½£©£º
-//   ×óÒ¡¸Ë×óÓÒ = Í¨µÀ4 -> ·½Ïò -25~+25 ¶È
-//   ÓÒÒ¡¸ËÉÏÏÂ = Í¨µÀ3 -> ËÙ¶È 0~3 m/s
-#define SBUS_CH_DIRECTION	3	// channels[3] = Í¨µÀ4
-#define SBUS_CH_SPEED		2	// channels[2] = Í¨µÀ3
+/* ============================ é…ç½® ============================ */
+// 6C-MINIï¼ˆå³æ‰‹æ²¹é—¨æ¨¡å¼ï¼‰ï¼š
+//   å·¦æ‘‡æ†å·¦å³ = é€šé“4 -> æ–¹å‘ -25~+25 åº¦
+//   å³æ‘‡æ†ä¸Šä¸‹ = é€šé“3 -> é€Ÿåº¦ 0~3 m/s
+#define SBUS_CH_DIRECTION	3	// channels[3] = é€šé“4
+#define SBUS_CH_SPEED		2	// channels[2] = é€šé“3
 
-// SBUS Í¨µÀÔ­Ê¼Öµ·¶Î§£¨¼û MC7RE-V2 ËµÃ÷Êé£©
+// SBUS é€šé“åŸå§‹å€¼èŒƒå›´ï¼ˆè§ MC7RE-V2 è¯´æ˜ä¹¦ï¼‰
 #define SBUS_RAW_MIN		200
 #define SBUS_RAW_MAX		1800
 #define SBUS_RAW_CENTER		1000
 
-// Êä³ö·¶Î§
-#define STEERING_MAX_DEG	7	// ·½Ïò£º-7 ~ +7 ¶È
-#define SPEED_MAX_CM_S		3	// ËÙ¶È£º0 ~ 3 m/s
+// è¾“å‡ºèŒƒå›´
+#define STEERING_MAX_DEG	7	// æ–¹å‘ï¼š-7 ~ +7 åº¦
+#define SPEED_MAX_CM_S		3	// é€Ÿåº¦ï¼š0 ~ 3 m/s
 
-// Ò¡¸ËÖĞÎ»ËÀÇø£¨Ô­Ê¼Öµ£©£¬·ÀÖ¹ÊÖ¶¶µ¼ÖÂÊä³ö¶¶¶¯
+// æ‘‡æ†ä¸­ä½æ­»åŒºï¼ˆåŸå§‹å€¼ï¼‰ï¼Œé˜²æ­¢æ‰‹æŠ–å¯¼è‡´è¾“å‡ºæŠ–åŠ¨
 #define DEADZONE			30
 
-// ĞÅºÅ¶ªÊ§£ºÔ¼1s£¨Ö÷Ñ­»·10msÒ»´Î£©ÊÕ²»µ½ÍêÕûÖ¡
+// ä¿¡å·ä¸¢å¤±ï¼šçº¦1sï¼ˆä¸»å¾ªç¯10msä¸€æ¬¡ï¼‰æ”¶ä¸åˆ°å®Œæ•´å¸§
 #define LOST_TIMEOUT		100
 
-// Í£³µÄ£Ê½²ÎÊı£¨SBUSÃ¿Ö¡Ô¼14ms£©
-#define PARK_ENTER_FRAMES	70	// ÍÆµ½µ×±£³ÖÔ¼1Ãë½øÈëÍ£³µ
-#define PARK_EXIT_FRAMES	20	// ÍÆµ½¸ßÎ»±£³ÖÔ¼0.3Ãë½â³ıÍ£³µ
-#define PARK_BOTTOM_OFFSET	100	// ÓëĞĞ³Ì×îµÍµãµÄ²îÖµ£¬Ğ¡ÓÚ´ËÖµÊÓÎªÍÆµ½µ×
+// åœè½¦æ¨¡å¼å‚æ•°ï¼ˆSBUSæ¯å¸§çº¦14msï¼‰
+#define PARK_ENTER_FRAMES	70	// æ¨åˆ°åº•ä¿æŒçº¦1ç§’è¿›å…¥åœè½¦
+#define PARK_EXIT_FRAMES	20	// æ¨åˆ°é«˜ä½ä¿æŒçº¦0.3ç§’è§£é™¤åœè½¦
+#define PARK_BOTTOM_OFFSET	100	// ä¸è¡Œç¨‹æœ€ä½ç‚¹çš„å·®å€¼ï¼Œå°äºæ­¤å€¼è§†ä¸ºæ¨åˆ°åº•
 
-// Ğ£×¼Íê³ÉÅĞ¶¨²ÎÊı£¨Ô­Ê¼Öµ£¬ÖĞÎ»=1000£©
-#define CALIB_MIN_SIDE		150	// ÖĞÎ»Ã¿²àÖÁÉÙÒªÍÆµ½ÕâÃ´Ô¶
-#define CALIB_MIN_DEVIATION	200	// ĞĞ³Ì¿ç¶È´ïµ½¸ÃÖµ²ÅÈÏÎªĞĞ³Ì×ã¹»
+// æ ¡å‡†å®Œæˆåˆ¤å®šå‚æ•°ï¼ˆåŸå§‹å€¼ï¼Œä¸­ä½=1000ï¼‰
+#define CALIB_MIN_SIDE		150	// ä¸­ä½æ¯ä¾§è‡³å°‘è¦æ¨åˆ°è¿™ä¹ˆè¿œ
+#define CALIB_MIN_DEVIATION	200	// è¡Œç¨‹è·¨åº¦è¾¾åˆ°è¯¥å€¼æ‰è®¤ä¸ºè¡Œç¨‹è¶³å¤Ÿ
 
-/* ===================== Ò¡¸ËĞĞ³Ì×Ô¶¯Ğ£×¼ ===================== */
-// ¿ª»úºó°ÑÁ½¸öÒ¡¸ËÏòÁ½²à¸÷ÍÆÒ»´Î£¬ÔÙ»Øµ½ÖĞÎ»£¬Ğ£×¼¼´Íê³É¡£
-// Ğ£×¼ÆÚ¼ä·½Ïò/ËÙ¶È¶¼Êä³ö0£¬±ÜÃâµÚÒ»´ÎÍÆ¸Ë¾ÍÌøµ½·åÖµ¡£
-// Ó³Éä¹Ì¶¨ÒÔÖĞÎ»1000Îª0µã£¬»ØÖĞÊ¼ÖÕÊä³ö0£¬²»»áÒò×óÓÒĞĞ³Ì²»¶Ô³Æ¶øÆ«ÖÃ¡£
+/* ===================== æ‘‡æ†è¡Œç¨‹è‡ªåŠ¨æ ¡å‡† ===================== */
+// å¼€æœºåæŠŠä¸¤ä¸ªæ‘‡æ†å‘ä¸¤ä¾§å„æ¨ä¸€æ¬¡ï¼Œå†å›åˆ°ä¸­ä½ï¼Œæ ¡å‡†å³å®Œæˆã€‚
+// æ ¡å‡†æœŸé—´æ–¹å‘/é€Ÿåº¦éƒ½è¾“å‡º0ï¼Œé¿å…ç¬¬ä¸€æ¬¡æ¨æ†å°±è·³åˆ°å³°å€¼ã€‚
+// æ˜ å°„å›ºå®šä»¥ä¸­ä½1000ä¸º0ç‚¹ï¼Œå›ä¸­å§‹ç»ˆè¾“å‡º0ï¼Œä¸ä¼šå› å·¦å³è¡Œç¨‹ä¸å¯¹ç§°è€Œåç½®ã€‚
 typedef struct
 {
 	uint16_t min_raw;
@@ -161,14 +161,14 @@ static RawCalib_t speed_calib = {SBUS_RAW_CENTER, SBUS_RAW_CENTER};
 static uint8_t steer_ready = 0;
 static uint8_t speed_ready = 0;
 
-// ÓÃµ±Ç°Ô­Ê¼ÖµÀ©Õ¹Ğ£×¼·¶Î§
+// ç”¨å½“å‰åŸå§‹å€¼æ‰©å±•æ ¡å‡†èŒƒå›´
 static void Calib_Update(RawCalib_t *calib, uint16_t raw)
 {
 	if (raw < calib->min_raw) { calib->min_raw = raw; }
 	if (raw > calib->max_raw) { calib->max_raw = raw; }
 }
 
-// ÖĞÎ»×ó²à/ÓÒ²àĞĞ³Ì
+// ä¸­ä½å·¦ä¾§/å³ä¾§è¡Œç¨‹
 static int32_t Calib_LeftDev(const RawCalib_t *calib)
 {
 	return SBUS_RAW_CENTER - calib->min_raw;
@@ -179,7 +179,7 @@ static int32_t Calib_RightDev(const RawCalib_t *calib)
 	return calib->max_raw - SBUS_RAW_CENTER;
 }
 
-// ÓĞĞ§°ëĞĞ³Ì£ºÈ¡×óÓÒÁ½²àÖĞ½Ï´óÕß
+// æœ‰æ•ˆåŠè¡Œç¨‹ï¼šå–å·¦å³ä¸¤ä¾§ä¸­è¾ƒå¤§è€…
 static int32_t Calib_HalfSpan(const RawCalib_t *calib)
 {
 	int32_t left = Calib_LeftDev(calib);
@@ -187,7 +187,7 @@ static int32_t Calib_HalfSpan(const RawCalib_t *calib)
 	return left > right ? left : right;
 }
 
-// Á½²àÊÇ·ñ¶¼É¨¹ı×ã¹»ĞĞ³Ì
+// ä¸¤ä¾§æ˜¯å¦éƒ½æ‰«è¿‡è¶³å¤Ÿè¡Œç¨‹
 static uint8_t Calib_SweepDone(const RawCalib_t *calib)
 {
 	return Calib_LeftDev(calib) >= CALIB_MIN_SIDE &&
@@ -195,13 +195,13 @@ static uint8_t Calib_SweepDone(const RawCalib_t *calib)
 	       Calib_HalfSpan(calib) >= CALIB_MIN_DEVIATION;
 }
 
-// Ò¡¸ËÊÇ·ñÔÚÖĞÎ»ËÀÇøÄÚ
+// æ‘‡æ†æ˜¯å¦åœ¨ä¸­ä½æ­»åŒºå†…
 static uint8_t InCenter(uint16_t raw)
 {
 	return raw > SBUS_RAW_CENTER - DEADZONE && raw < SBUS_RAW_CENTER + DEADZONE;
 }
 
-// Ô­Ê¼ÖµÒÔÖĞÎ»1000Îª0µã£¬°´ÓĞĞ§°ëĞĞ³ÌÓ³ÉäÎª -max~+max£¨ÓÃÓÚ·½Ïò£©
+// åŸå§‹å€¼ä»¥ä¸­ä½1000ä¸º0ç‚¹ï¼ŒæŒ‰æœ‰æ•ˆåŠè¡Œç¨‹æ˜ å°„ä¸º -max~+maxï¼ˆç”¨äºæ–¹å‘ï¼‰
 static int16_t Calib_ToSigned(uint16_t raw, const RawCalib_t *calib, int16_t max)
 {
 	int32_t half = Calib_HalfSpan(calib);
@@ -209,7 +209,7 @@ static int16_t Calib_ToSigned(uint16_t raw, const RawCalib_t *calib, int16_t max
 	return (int16_t)(((int32_t)raw - SBUS_RAW_CENTER) * max / half);
 }
 
-// Ô­Ê¼ÖµÒÔÖĞÎ»1000Îª0µã£¬ÏòÉÏÍÆÊ±Ó³ÉäÎª0~max£¨ÓÃÓÚËÙ¶È£©
+// åŸå§‹å€¼ä»¥ä¸­ä½1000ä¸º0ç‚¹ï¼Œå‘ä¸Šæ¨æ—¶æ˜ å°„ä¸º0~maxï¼ˆç”¨äºé€Ÿåº¦ï¼‰
 static uint16_t Calib_ToSpeed(uint16_t raw, const RawCalib_t *calib, uint16_t max)
 {
 	int32_t half = Calib_HalfSpan(calib);
@@ -222,9 +222,9 @@ static uint16_t Calib_ToSpeed(uint16_t raw, const RawCalib_t *calib, uint16_t ma
 	return (uint16_t)value;
 }
 
-/* ========================= Êı¾İ½âÎö ========================= */
+/* ========================= æ•°æ®è§£æ ========================= */
 
-// ½«Ô­Ê¼ÖµÏŞ·ùµ½ºÏ·¨·¶Î§
+// å°†åŸå§‹å€¼é™å¹…åˆ°åˆæ³•èŒƒå›´
 static uint16_t ClampRaw(uint16_t raw)
 {
 	if (raw < SBUS_RAW_MIN) { raw = SBUS_RAW_MIN; }
@@ -232,7 +232,7 @@ static uint16_t ClampRaw(uint16_t raw)
 	return raw;
 }
 
-// ´Ó25×Ö½ÚSBUSÖ¡ÖĞ°´Î»½âÎö16¸öÍ¨µÀ£¬Ã¿¸öÍ¨µÀ11bit
+// ä»25å­—èŠ‚SBUSå¸§ä¸­æŒ‰ä½è§£æ16ä¸ªé€šé“ï¼Œæ¯ä¸ªé€šé“11bit
 static void SBUS_ParseChannels(uint8_t *buf, uint16_t *channels)
 {
 	uint8_t *data = &buf[1];
@@ -253,9 +253,9 @@ static void SBUS_ParseChannels(uint8_t *buf, uint16_t *channels)
 	}
 }
 
-/* ======================= Ö÷Ñ­»·µ÷ÓÃÈë¿Ú ======================= */
-// Ã¿Ö¡Á÷³Ì£ºÈ¡Ö¡ -> ½âÎö/Ğ£×¼ -> ¶ªĞÅºÅÓëÍ£³µ´¦Àí -> ¸üĞÂ½Ç¶ÈºÍËÙ¶È
-// Í£³µ¡¢ĞÅºÅ¶ªÊ§µÈ×´Ì¬¶¼ÔÚº¯ÊıÄÚ²¿´¦Àí£¬Íâ²¿Ö»ĞèÒª¶ÁÈ¡½Ç¶ÈºÍËÙ¶È¡£
+/* ======================= ä¸»å¾ªç¯è°ƒç”¨å…¥å£ ======================= */
+// æ¯å¸§æµç¨‹ï¼šå–å¸§ -> è§£æ/æ ¡å‡† -> ä¸¢ä¿¡å·ä¸åœè½¦å¤„ç† -> æ›´æ–°è§’åº¦å’Œé€Ÿåº¦
+// åœè½¦ã€ä¿¡å·ä¸¢å¤±ç­‰çŠ¶æ€éƒ½åœ¨å‡½æ•°å†…éƒ¨å¤„ç†ï¼Œå¤–éƒ¨åªéœ€è¦è¯»å–è§’åº¦å’Œé€Ÿåº¦ã€‚
 void SBUS_Process(CarControl_t *ctrl)
 {
 	uint8_t frame[25];
@@ -264,21 +264,21 @@ void SBUS_Process(CarControl_t *ctrl)
 	uint16_t raw_speed;
 	uint8_t throttle_bottom;
 	uint8_t throttle_active;
-	static CarControl_t current;	// ×î½üÒ»´ÎÓĞĞ§¿ØÖÆÁ¿
-	static uint8_t lost = 1;		// ĞÅºÅ¶ªÊ§×´Ì¬
-	static uint8_t parked = 0;		// Í£³µËø¶¨×´Ì¬
-	static uint8_t rearm = 0;		// Í£³µ½â³ıºóĞè»ØÖĞ²ÅÄÜÖØĞÂ¼ÓËÙ
-	static uint16_t timeout = 0;	// Î´ÊÕµ½Ö¡µÄÀÛ¼Æ¼ÆÊı
-	static uint16_t park_enter = 0;	// ÍÆµ½µ×ÀÛ¼ÆÖ¡Êı
-	static uint16_t park_exit = 0;	// ÍÆ¸ßÀÛ¼ÆÖ¡Êı
+	static CarControl_t current;	// æœ€è¿‘ä¸€æ¬¡æœ‰æ•ˆæ§åˆ¶é‡
+	static uint8_t lost = 1;		// ä¿¡å·ä¸¢å¤±çŠ¶æ€
+	static uint8_t parked = 0;		// åœè½¦é”å®šçŠ¶æ€
+	static uint8_t rearm = 0;		// åœè½¦è§£é™¤åéœ€å›ä¸­æ‰èƒ½é‡æ–°åŠ é€Ÿ
+	static uint16_t timeout = 0;	// æœªæ”¶åˆ°å¸§çš„ç´¯è®¡è®¡æ•°
+	static uint16_t park_enter = 0;	// æ¨åˆ°åº•ç´¯è®¡å¸§æ•°
+	static uint16_t park_exit = 0;	// æ¨é«˜ç´¯è®¡å¸§æ•°
 
-	// 1. È¡Ö¡£ºÃ»ÊÕµ½Ö¡Ê±ÀÛ¼Æ³¬Ê±£¬³¬¹ıÔ¼100msÅĞ¶¨ĞÅºÅ¶ªÊ§
+	// 1. å–å¸§ï¼šæ²¡æ”¶åˆ°å¸§æ—¶ç´¯è®¡è¶…æ—¶ï¼Œè¶…è¿‡çº¦100msåˆ¤å®šä¿¡å·ä¸¢å¤±
 	if (!Serial_GetSBUSFrame(frame))
 	{
 		timeout++;
 		if (timeout > LOST_TIMEOUT && !lost)
 		{
-			lost = 1;			// ĞÅºÅ¶ªÊ§£º·½Ïò¹éÖĞ¡¢ËÙ¶È¹éÁã
+			lost = 1;			// ä¿¡å·ä¸¢å¤±ï¼šæ–¹å‘å½’ä¸­ã€é€Ÿåº¦å½’é›¶
 			current.steering_deg = 0;
 			current.speed_m_s = 0;
 		}
@@ -290,14 +290,14 @@ void SBUS_Process(CarControl_t *ctrl)
 	}
 	timeout = 0;
 
-	// 2. ½âÎöÍ¨µÀ²¢¸üĞÂÒ¡¸ËĞĞ³ÌĞ£×¼
+	// 2. è§£æé€šé“å¹¶æ›´æ–°æ‘‡æ†è¡Œç¨‹æ ¡å‡†
 	SBUS_ParseChannels(frame, channels);
 	raw_steer = ClampRaw(channels[SBUS_CH_DIRECTION]);
 	raw_speed = ClampRaw(channels[SBUS_CH_SPEED]);
 	Calib_Update(&steer_calib, raw_steer);
 	Calib_Update(&speed_calib, raw_speed);
 
-	// 3. Ğ£×¼Ëø´æ£ºĞĞ³ÌÉ¨¹»ÇÒÒ¡¸Ë»Øµ½ÖĞÎ»ºóÉúĞ§£¬Ö®ºóÒ»Ö±±£³Ö
+	// 3. æ ¡å‡†é”å­˜ï¼šè¡Œç¨‹æ‰«å¤Ÿä¸”æ‘‡æ†å›åˆ°ä¸­ä½åç”Ÿæ•ˆï¼Œä¹‹åä¸€ç›´ä¿æŒ
 	if (!steer_ready && Calib_SweepDone(&steer_calib) && InCenter(raw_steer))
 	{
 		steer_ready = 1;
@@ -307,7 +307,7 @@ void SBUS_Process(CarControl_t *ctrl)
 		speed_ready = 1;
 	}
 
-	// 4. Ö¡±êÖ¾£º0x10=ĞÅºÅ¶ªÊ§£¬0x20=Ê§¿Ø±£»¤£¬´¥·¢ºóÍ£³µ¹éÖĞ
+	// 4. å¸§æ ‡å¿—ï¼š0x10=ä¿¡å·ä¸¢å¤±ï¼Œ0x20=å¤±æ§ä¿æŠ¤ï¼Œè§¦å‘ååœè½¦å½’ä¸­
 	if (frame[23] & 0x30)
 	{
 		lost = 1;
@@ -324,12 +324,12 @@ void SBUS_Process(CarControl_t *ctrl)
 	current.parked = parked;
 	current.driving = (speed_ready && !parked && !rearm) ? 1 : 0;
 
-	// 5. Ó³Éä·½Ïò£¨Ğ£×¼Íê³ÉÇ°Êä³ö0£»×óÕıÓÒ¸º£©
+	// 5. æ˜ å°„æ–¹å‘ï¼ˆæ ¡å‡†å®Œæˆå‰è¾“å‡º0ï¼›å·¦æ­£å³è´Ÿï¼‰
 	current.steering_deg = steer_ready && !InCenter(raw_steer)
 		? -Calib_ToSigned(raw_steer, &steer_calib, STEERING_MAX_DEG)
 		: 0;
 
-	// 6. Í£³µÄ£Ê½£ºÍÆµ½µ×±£³ÖÔ¼1Ãë½øÈë£»ÍÆ¹ı70%ĞĞ³Ì±£³ÖÔ¼0.3Ãë½â³ı
+	// 6. åœè½¦æ¨¡å¼ï¼šæ¨åˆ°åº•ä¿æŒçº¦1ç§’è¿›å…¥ï¼›æ¨è¿‡70%è¡Œç¨‹ä¿æŒçº¦0.3ç§’è§£é™¤
 	throttle_bottom = speed_ready && (raw_speed <= speed_calib.min_raw + PARK_BOTTOM_OFFSET);
 	throttle_active = speed_ready && (raw_speed >= SBUS_RAW_CENTER + Calib_HalfSpan(&speed_calib) * 7 / 10);
 	if (throttle_bottom)
@@ -348,30 +348,30 @@ void SBUS_Process(CarControl_t *ctrl)
 		if (park_exit >= PARK_EXIT_FRAMES)
 		{
 			parked = 0;
-			rearm = 1;	// ½â³ıÍ£³µºó±ØĞë»ØÖĞ²ÅÄÜÖØĞÂ¼ÓËÙ
+			rearm = 1;	// è§£é™¤åœè½¦åå¿…é¡»å›ä¸­æ‰èƒ½é‡æ–°åŠ é€Ÿ
 			park_enter = 0;
 			park_exit = 0;
 		}
 	}
 	else
 	{
-		// Ò¡¸ËÔÚÖĞÎ»£º±£³Öµ±Ç°Í£³µ×´Ì¬£¬½öÇåÁã¼ÆÊ±
+		// æ‘‡æ†åœ¨ä¸­ä½ï¼šä¿æŒå½“å‰åœè½¦çŠ¶æ€ï¼Œä»…æ¸…é›¶è®¡æ—¶
 		park_enter = 0;
 		park_exit = 0;
 	}
 
-	// »ØÖĞºó½â³ı¼ÓËÙËø¶¨
+	// å›ä¸­åè§£é™¤åŠ é€Ÿé”å®š
 	if (rearm && InCenter(raw_speed))
 	{
 		rearm = 0;
 	}
 
-	// 7. ËÙ¶È£ºÍ£³µÖĞ»òÍ£³µ½â³ıºóÎ´»ØÖĞÊ±Êä³ö0£¬»ØÖĞºó°´ĞĞ³ÌÏßĞÔ¼ÓËÙ
+	// 7. é€Ÿåº¦ï¼šåœè½¦ä¸­æˆ–åœè½¦è§£é™¤åæœªå›ä¸­æ—¶è¾“å‡º0ï¼Œå›ä¸­åæŒ‰è¡Œç¨‹çº¿æ€§åŠ é€Ÿ
 	current.speed_m_s = (speed_ready && !parked && !rearm)
 		? Calib_ToSpeed(raw_speed, &speed_calib, SPEED_MAX_CM_S)
 		: 0;
 
-	// 8. Êä³ö×îĞÂ½Ç¶ÈºÍËÙ¶È
+	// 8. è¾“å‡ºæœ€æ–°è§’åº¦å’Œé€Ÿåº¦
 	current.lost = lost;
 	current.parked = parked;
 	current.driving = (speed_ready && !lost && !parked && !rearm) ? 1 : 0;

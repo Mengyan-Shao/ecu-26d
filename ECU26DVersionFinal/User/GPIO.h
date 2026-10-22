@@ -1,10 +1,10 @@
-#ifndef __GPIO_H
+ï»¿#ifndef __GPIO_H
 #define __GPIO_H
 
 #define Toggle(p,i)  do{ (p)->ODR ^= (i); }while(0)
 
 /*
-CANÊÕ·¢Ö¸Ê¾µÆ
+CANæ”¶å‘æŒ‡ç¤ºç¯
 LED1:PB6 C3R
 LED2:PB5 C3T
 */
@@ -18,9 +18,9 @@ LED2:PB5 C3T
 #define CAN_TX_Toggle       Toggle(LED2_Port,LED2_Pin)
 
 /*
-ASSIÖ¸Ê¾µÆ(¸ßÁÁµÍÃğ)
-ASSI-1-YELLOW£ºPC7
-ASSI-2-BLUE£ºPC6
+ASSIæŒ‡ç¤ºç¯(é«˜äº®ä½ç­)
+ASSI-1-YELLOWï¼šPC7
+ASSI-2-BLUEï¼šPC6
 */
 #define ASSI_1_Pin          GPIO_Pin_7
 #define ASSI_1_Port         GPIOC
@@ -41,7 +41,7 @@ ASSI-2-BLUE£ºPC6
 
 #define BothLight           do{GPIO_SetBits(ASSI_1_Port,ASSI_1_Pin);GPIO_SetBits(ASSI_2_Port,ASSI_2_Pin);}while(0)
 
-//·äÃùÆ÷ BEEP:PC8 ¸ßÏìµÍÃğ
+//èœ‚é¸£å™¨ BEEP:PC8 é«˜å“ä½ç­
 #define BEEP_Pin 	        GPIO_Pin_8
 #define BEEP_Port	        GPIOC
 #define BEEP_GPIO_CLK		RCC_APB2Periph_GPIOC
@@ -49,26 +49,26 @@ ASSI-2-BLUE£ºPC6
 #define BEEP_ON 	        do{GPIO_SetBits(BEEP_Port,BEEP_Pin);}while(0)
 #define BEEP_Toggle         Toggle(BEEP_Port,BEEP_Pin)
 
-//Ê¹ÄÜµÆ ENABLELED£ºPC9 ¸ßÁÁµÍÃğ
+//ä½¿èƒ½ç¯ ENABLELEDï¼šPC9 é«˜äº®ä½ç­
 #define ENABLELED_Pin  		GPIO_Pin_9
 #define ENABLELED_Port 		GPIOC
 #define ENABLELED_GPIO_CLK	RCC_APB2Periph_GPIOC
 #define ToDrive_LED_ON 		do{GPIO_SetBits(ENABLELED_Port,ENABLELED_Pin);}while(0)
 #define ToDrive_LED_OFF 	do{GPIO_ResetBits(ENABLELED_Port,ENABLELED_Pin);}while(0)
 
-//°²È«»ØÂ·¸ßÑ¹¼ì²â SC_OUT:PB15 Òı½ÅµÍµçÆ½Ê±ÓĞĞ§
+//å®‰å…¨å›è·¯é«˜å‹æ£€æµ‹ SC_OUT:PB15 å¼•è„šä½ç”µå¹³æ—¶æœ‰æ•ˆ
 #define SC_OUT_Pin          GPIO_Pin_15
 #define SC_OUT_Port         GPIOB
 #define SC_OUT_GPIO_CLK		RCC_APB2Periph_GPIOB
 #define SC_OUT			    (GPIO_ReadInputDataBit(SC_OUT_Port,SC_OUT_Pin)==0)
 
-//ASMS:PB14 Òı½ÅµÍµçÆ½Ê±ÓĞĞ§
+//ASMS:PB14 å¼•è„šä½ç”µå¹³æ—¶æœ‰æ•ˆ
 #define ASMS_Pin 	        GPIO_Pin_14
 #define ASMS_Port           GPIOB
 #define ASMS_GPIO_CLK		RCC_APB2Periph_GPIOB
 #define ASMS		        (GPIO_ReadInputDataBit(ASMS_Port,ASMS_Pin)==0)
 
-//Ê¹ÄÜ°´¼ü KEY_ENABLE£ºPA3 Òı½ÅµÍµçÆ½Ê±ÓĞĞ§
+//ä½¿èƒ½æŒ‰é”® KEY_ENABLEï¼šPA3 å¼•è„šä½ç”µå¹³æ—¶æœ‰æ•ˆ
 #define KEY_ENABLE_Pin	    GPIO_Pin_3
 #define KEY_ENABLE_Port     GPIOA
 #define KEY_ENABLE_GPIO_CLK	RCC_APB2Periph_GPIOA

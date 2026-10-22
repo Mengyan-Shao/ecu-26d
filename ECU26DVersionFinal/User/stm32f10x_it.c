@@ -1,10 +1,10 @@
-#include "stm32f10x_it.h" 
+ï»¿#include "stm32f10x_it.h" 
 #include "GPIO.h"
 #include "CAN.h"
 #include "TIME.h"
 #include "Flag.h"
 
-//---------------For CAN3---------------/EBS,RES,ROS£¬AMI£¬»ªº£
+//---------------For CAN3---------------/EBS,RES,ROSï¼ŒAMIï¼Œåæµ·
 extern		 CanTxMsg	 HRT_CTRL;
 extern		 CanRxMsg	 CAN_RxMessage;
 
@@ -17,9 +17,9 @@ void		 Motor_State(void);
 void		 Motor_State_Disable(void);
 void		 Emergency_Flag_Config(void);
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-ÖĞ¶Ïº¯Êı
+ä¸­æ–­å‡½æ•°
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**/
-//-----------------------------¶¨Ê±ÖĞ¶ÏTIM6£º100 HZ == 10ms--------------------------//---Ö»´ò½ÚÅÄ---//
+//-----------------------------å®šæ—¶ä¸­æ–­TIM6ï¼š100 HZ == 10ms--------------------------//---åªæ‰“èŠ‚æ‹---//
 void TIM6_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM6,TIM_IT_Update)==SET)
@@ -28,13 +28,13 @@ void TIM6_IRQHandler(void)
 		Tick_10ms=1;
 	}
 }
-/*----------------------------10msÈÎÎñ£ºÖ÷Ñ­»·µ÷ÓÃ----------------------------*/
+/*----------------------------10msä»»åŠ¡ï¼šä¸»å¾ªç¯è°ƒç”¨----------------------------*/
 void ECU_Task_10ms(void)
 {
-	//------------------------------------ÓĞÈËÄ£Ê½---------------------------------------//
+	//------------------------------------æœ‰äººæ¨¡å¼---------------------------------------//
 	if(Match_Mode==0 || MODE_LOCK_Flag==0)
 		{
-			//ÖÆ¶¯¼ì²â EBSÓÍÑ¹
+			//åˆ¶åŠ¨æ£€æµ‹ EBSæ²¹å‹
 			if(EBS_Oil>=1000)	
 			{				
 				Brake_Flag=1;
@@ -44,7 +44,7 @@ void ECU_Task_10ms(void)
 				Brake_Flag=0;
 			}
 			
-			//ÖÆ¶¯Ì¤°åÊ±¼ä¼ì²â
+			//åˆ¶åŠ¨è¸æ¿æ—¶é—´æ£€æµ‹
 			if(Brake_Flag==1)
 			{
 				Brake_Time++;
@@ -56,7 +56,7 @@ void ECU_Task_10ms(void)
 				Brake_Time=0;
 			}
 			
-			//Ê¹ÄÜ°´Å¥¼ì²â
+			//ä½¿èƒ½æŒ‰é’®æ£€æµ‹
 			if(KEY_ENABLE)  
 			{
 				Key_Time++;
@@ -71,10 +71,10 @@ void ECU_Task_10ms(void)
 				Key_Time=0;
 			}
 		
-			//ÓĞÈËÄ£Ê½×´Ì¬»ú
+			//æœ‰äººæ¨¡å¼çŠ¶æ€æœº
 			switch(Man_State)
 			{
-				case 0: //µÍÑ¹
+				case 0: //ä½å‹
 					Statu_Flag=0;
 					AMI_State=0;
 
@@ -107,7 +107,7 @@ void ECU_Task_10ms(void)
 					ToDrive_LED_OFF;      
 					break;
 					
-				case 1: //¸ßÑ¹ 
+				case 1: //é«˜å‹ 
 					Statu_Flag=1;
 					AMI_State=0;
 					if(MODE_LOCK_Flag==0)
@@ -122,7 +122,7 @@ void ECU_Task_10ms(void)
 						Man_State=0;
 					}
 					
-					if((Key_Time>100)&&(Brake_Time>100)&&(EBS_Air<100)) //ÅĞ¶ÏÊ¹ÄÜ°´¼ü ÖÆ¶¯Ì¤°å EBSÊÍ·Å
+					if((Key_Time>100)&&(Brake_Time>100)&&(EBS_Air<100)) //åˆ¤æ–­ä½¿èƒ½æŒ‰é”® åˆ¶åŠ¨è¸æ¿ EBSé‡Šæ”¾
 					{
 						Man_State=2;
 					}						
@@ -130,7 +130,7 @@ void ECU_Task_10ms(void)
 					ToDrive_LED_OFF;
 					break;
 					
-				case 2: //Ê¹ÄÜ Manual Driving
+				case 2: //ä½¿èƒ½ Manual Driving
 					Statu_Flag=1;
 					if(MODE_LOCK_Flag==0)
 					{
@@ -143,17 +143,17 @@ void ECU_Task_10ms(void)
 						Man_State=0;
 					}
 					
-					if((Key_Time>200)&&(Brake_Time<100))//ÊÖ¶¯ÏÂÊ¹ÄÜ
+					if((Key_Time>200)&&(Brake_Time<100))//æ‰‹åŠ¨ä¸‹ä½¿èƒ½
 					{
 						Man_State=1;
 					}
 					
-					if(Motor_EN_State)//Ê¹ÄÜµÆÌõ¼ş
+					if(Motor_EN_State)//ä½¿èƒ½ç¯æ¡ä»¶
 					{
 						ToDrive_LED_ON;
 					}
 					
-					Motor_State(); //¿ØÖÆÆ÷ÉÏÊ¹ÄÜ
+					Motor_State(); //æ§åˆ¶å™¨ä¸Šä½¿èƒ½
 					break;
 			}	
 			
@@ -161,21 +161,21 @@ void ECU_Task_10ms(void)
 			ASSI_State=0;
 			Man_ERROR_TEST();
 		}
-//------------------------------------ÎŞÈËÄ£Ê½---------------------------------------//
-		else if(Match_Mode!=0 && MODE_LOCK_Flag==1)//Ä£Ê½Ëø¶¨
+//------------------------------------æ— äººæ¨¡å¼---------------------------------------//
+		else if(Match_Mode!=0 && MODE_LOCK_Flag==1)//æ¨¡å¼é”å®š
 		{
 			if (Statu_Flag == 1)
 			{
-				Statu_Flag = 0;   // °Ñ¾ÉÓĞÈË×´Ì¬Çå³ÉµÍÑ¹
+				Statu_Flag = 0;   // æŠŠæ—§æœ‰äººçŠ¶æ€æ¸…æˆä½å‹
 				Man_State = 0;
 			}
 			switch(Statu_Flag)		
 			{
-				case 0: //µÍÑ¹   AS OFF
+				case 0: //ä½å‹   AS OFF
 					AMI_State=0;
 					RES_GO=0;
 				
-					//µÍÑ¹->ÎŞÈË¸ßÑ¹
+					//ä½å‹->æ— äººé«˜å‹
 					if(ASMS&&SC_OUT)
 					{
 						Statu_Flag=2;
@@ -186,10 +186,10 @@ void ECU_Task_10ms(void)
 					Motor_State_Disable();
 					break;
 					
-				case 2: //ÎŞÈË¸ßÑ¹  AS OFF
+				case 2: //æ— äººé«˜å‹  AS OFF
 					AMI_State=0;
 				
-					//ÎŞÈË¸ßÑ¹->×¼±¸
+					//æ— äººé«˜å‹->å‡†å¤‡
 					if(Error_Flag==0&&ROS_Statu_Flag==3&&RES_State==4&&EBS_Ready==1)
 					{
 						Motor_State();
@@ -207,21 +207,21 @@ void ECU_Task_10ms(void)
 					}
 					break;
 					
-				case 3: //×¼±¸ AS Ready
+				case 3: //å‡†å¤‡ AS Ready
 					Motor_State();
 					AMI_State=1;
 					ReadyTime++;
 				
-					//×¼±¸->ĞĞÊ»
-					if(RES_State==5)//½ÓÊÕ¶ÎÅĞ¶ÏGO£¨ÒÑ¾­5SÑÓÊ±¹ı£©
+					//å‡†å¤‡->è¡Œé©¶
+					if(RES_State==5)//æ¥æ”¶æ®µåˆ¤æ–­GOï¼ˆå·²ç»5Så»¶æ—¶è¿‡ï¼‰
 					{
 						ASSI_State=2;
-						Beep_ros=0;//Æô¶¯·äÃù
+						Beep_ros=0;//å¯åŠ¨èœ‚é¸£
 						Statu_Flag=4;
 					}
 
-					//×¼±¸->ÖÆ¶¯
-					//µô¸ßÑ¹,ROSµôÏß,×ªÏòµç»úµôÏß
+					//å‡†å¤‡->åˆ¶åŠ¨
+					//æ‰é«˜å‹,ROSæ‰çº¿,è½¬å‘ç”µæœºæ‰çº¿
 					if(!SC_OUT || ROS_LOSE_Flag==255 || Steering_LOST_Flag==255)		
 					{
 						Emergency_Flag_Config();
@@ -231,19 +231,19 @@ void ECU_Task_10ms(void)
 					}
 					break;
 					
-				case 4://ĞĞÊ»  AS DRIVING
+				case 4://è¡Œé©¶  AS DRIVING
 					Motor_State();
 					AMI_State=2;
 				
 					if(Beep_flag)
 						{
-							Beep_ros=3;	//·äÃùÍê³É
+							Beep_ros=3;	//èœ‚é¸£å®Œæˆ
 							RES_GO=1;
 							Beep_flag=0;
 						}
 						
-					//ĞĞÊ»->ÖÆ¶¯
-					//µô¸ßÑ¹£¬ROSµôÏß£¬×ªÏòµç»ú±¨´í£¬×ªÏòµç»úµôÏß
+					//è¡Œé©¶->åˆ¶åŠ¨
+					//æ‰é«˜å‹ï¼ŒROSæ‰çº¿ï¼Œè½¬å‘ç”µæœºæŠ¥é”™ï¼Œè½¬å‘ç”µæœºæ‰çº¿
 					if(!SC_OUT || ROS_LOSE_Flag==255 || Steering_ERROR || Steering_LOST_Flag==255)
 					{
 						Emergency_Flag_Config();
@@ -252,7 +252,7 @@ void ECU_Task_10ms(void)
 						Beep_ros=1;
 					}	
 					
-					//ĞĞÊ»->Íê³É
+					//è¡Œé©¶->å®Œæˆ
 					if(ROS_Statu_Flag==5&&ASMS)
 					{
 						if(Motor_Speed<1)
@@ -264,11 +264,11 @@ void ECU_Task_10ms(void)
 					
 					break;
 					
-				case 5://Íê³É AS FINISHED
+				case 5://å®Œæˆ AS FINISHED
 					Motor_State_Disable();
 					AMI_State=3;
 				
-					//Íê³É->ÖÆ¶¯
+					//å®Œæˆ->åˆ¶åŠ¨
 					if(RES_State==0)//RES EME
 					{
 						Statu_Flag=6;	
@@ -276,7 +276,7 @@ void ECU_Task_10ms(void)
 						Beep_ros=1;
 					}
 					
-					//Íê³É->µÍÑ¹
+					//å®Œæˆ->ä½å‹
 					if(!ASMS&&EBS_Air<=100)
 					{
 						ASSI_State=0;
@@ -286,7 +286,7 @@ void ECU_Task_10ms(void)
 					}
 					break;
 					
-				case 6://ÖÆ¶¯ AS EMERGENCY
+				case 6://åˆ¶åŠ¨ AS EMERGENCY
 					Motor_State();
 					AMI_State=4;
 				
@@ -301,13 +301,13 @@ void ECU_Task_10ms(void)
 					break;
 			}	
 			
-			//µôÏßÊ±¼ä¼ÆÊı
+			//æ‰çº¿æ—¶é—´è®¡æ•°
 			if(Emergency_Flag && Error_Flag && Lose_Time<255)
 			{
 				Lose_Time++;
 			}			
 			
-			//Ê¹ÄÜµÆ×´Ì¬
+			//ä½¿èƒ½ç¯çŠ¶æ€
 			if(Motor_EN_State==1)    
 			{			
 				ToDrive_LED_ON;
@@ -319,10 +319,10 @@ void ECU_Task_10ms(void)
 			
 			AS_ERROR_Test();
 			ASSI_SHOW();     
-			AS_BEEP();//ÎŞÈË·äÃù
+			AS_BEEP();//æ— äººèœ‚é¸£
 		}
-//------------------------------------ÓĞÈË&ÎŞÈË--------------------------------------//	 	
-	//-------------CAN1·¢ËÍ-----------//		
+//------------------------------------æœ‰äºº&æ— äºº--------------------------------------//	 	
+	//-------------CAN1å‘é€-----------//		
 		if(time0%2==1)
 		{
 			HRT_CTRL.Data[0]=(uint8_t)(Statu_Flag|ASMS<<3|Man_State<<4);						//0(ASMS) 000(Statu_Flag)
@@ -336,31 +336,31 @@ void ECU_Task_10ms(void)
 			HRT_CTRL.Data[5]=(uint8_t)((Emergency_Flag)| (SBUS.steering_deg <<4));		
 			HRT_CTRL.Data[6]=(uint8_t)Lose_Time;
 			HRT_CTRL.Data[7]=(uint8_t)((Motor_EN_State)|(SC_OUT<<1)|(RES_GO<<4)|((SBUS.speed_m_s * 2) << 5));	
-			if(CAN_Send(HRT_CTRL))//¼ì²âÊÇ·ñ·¢ËÍ³É¹¦
+			if(CAN_Send(HRT_CTRL))//æ£€æµ‹æ˜¯å¦å‘é€æˆåŠŸ
 			{
 				CAN_TX_Toggle;
 			}
 		}
 
-		//-------------Ê±¼ä¸´Î»----------//
+		//-------------æ—¶é—´å¤ä½----------//
 		if(time0==100)
 		{
 			time0=0;
 		}
 		time0++;	
 }
-/*----------------------------¶¨Ê±ÖĞ¶ÏÒÔÉÏ----------------------------*/
+/*----------------------------å®šæ—¶ä¸­æ–­ä»¥ä¸Š----------------------------*/
 
-//-------------------CAN1½ÓÊÕÖĞ¶Ï--------------------//
+//-------------------CAN1æ¥æ”¶ä¸­æ–­--------------------//
 void CAN1_RX0_IRQHandler(void)
 {
-	CAN_RX_Toggle;  //CAN3½ÓÊÕÖ¸Ê¾µÆÉÁË¸
+	CAN_RX_Toggle;  //CAN3æ¥æ”¶æŒ‡ç¤ºç¯é—ªçƒ
 	
 	CAN_Receive(CAN1, CAN_FIFO0, &CAN_RxMessage);
 	
 	switch(CAN_RxMessage.StdId)
 	{
-		case 0x055:			//Ñ¡ÔñÄ£Ê½±¨ÎÄ
+		case 0x055:			//é€‰æ‹©æ¨¡å¼æŠ¥æ–‡
 			Match_Mode=CAN_RxMessage.Data[0];
 			MODE_LOCK_Flag=1;
 			break;
@@ -368,20 +368,20 @@ void CAN1_RX0_IRQHandler(void)
 		case 0x003:			//RES
 			switch(CAN_RxMessage.Data[0])
 			{
-				case 7://GOĞÅºÅ
+				case 7://GOä¿¡å·
 					RES_State=5;
 					break;
-				case 5://×¼±¸
+				case 5://å‡†å¤‡
 					RES_State=4;
 					break;
-				case 0://½ô¼±ÖÆ¶¯
+				case 0://ç´§æ€¥åˆ¶åŠ¨
 					RES_State=0;
 					break;
 			}
 			RES_LOSE_Flag=0;
 			break;
 
-		case 0x002:		//EBS×´Ì¬ºÍEBSÆøÑ¹£¨Ö»ÅĞ¶Ï×óÇ°£©
+		case 0x002:		//EBSçŠ¶æ€å’ŒEBSæ°”å‹ï¼ˆåªåˆ¤æ–­å·¦å‰ï¼‰
 			EBS_LOSE_Flag=0;
 			EBS_Ready=(CAN_RxMessage.Data[4]&0x10)>>4;
 			EBS_State=CAN_RxMessage.Data[5]&0x0F;	
@@ -390,25 +390,25 @@ void CAN1_RX0_IRQHandler(void)
 			EBS_Air =  (EBS_AirH<<8) |  EBS_AirL;
 		    break;	
 		
-		case 0x402:		//EBSÓÍÑ¹£¨Ö»ÅĞ¶Ï×óÇ°£©
+		case 0x402:		//EBSæ²¹å‹ï¼ˆåªåˆ¤æ–­å·¦å‰ï¼‰
 			EBS_Oilh =  (uint16_t)CAN_RxMessage.Data[1];
 			EBS_Oill =  (uint16_t)CAN_RxMessage.Data[0];	 
 			EBS_Oil  =  (EBS_Oilh<<8) | EBS_Oill; 
 			break;
 		
-		case 0x020:		//¹¤×÷Õ¾±¨ÎÄ
+		case 0x020:		//å·¥ä½œç«™æŠ¥æ–‡
 			ROS_LOSE_Flag=0;
-			if(Statu_Flag==2||Statu_Flag==3||Statu_Flag==4||Statu_Flag==5||Statu_Flag==6)				//ÎŞÈË×´Ì¬
+			if(Statu_Flag==2||Statu_Flag==3||Statu_Flag==4||Statu_Flag==5||Statu_Flag==6)				//æ— äººçŠ¶æ€
 			{
 				ROS_Statu_Flag=CAN_RxMessage.Data[0] & 0x0F;
 			}
 			break;
 			
-		case 0X232:    //»ªº£·¢µÄËÄµç»úÄ¿±êËÙ¶È ÓÃÓÚÅĞ¶Ï»ªº£ÔÚÏß
+		case 0X232:    //åæµ·å‘çš„å››ç”µæœºç›®æ ‡é€Ÿåº¦ ç”¨äºåˆ¤æ–­åæµ·åœ¨çº¿
 			HUAHAI_LOSE_Flag = 0;
 			break;
 		
-		case 0x157:     //µç»ú×´Ì¬Í³Ò»±¨ÎÄ µÚÒ»¸ö×Ö½ÚÊÇËÄ¸öµç»ú£¨×óºó×óÇ°ÓÒºóÓÒÇ°£©µÄÊµ¼Ê×´Ì¬ µÚ¶ş¸ö×Ö½ÚÊÇÕû³µËÙ¶È£¨0£ºËÙ¶ÈĞ¡ÓÚ1m/s 1:ËÙ¶È´óÓÚ1m/s£©
+		case 0x157:     //ç”µæœºçŠ¶æ€ç»Ÿä¸€æŠ¥æ–‡ ç¬¬ä¸€ä¸ªå­—èŠ‚æ˜¯å››ä¸ªç”µæœºï¼ˆå·¦åå·¦å‰å³åå³å‰ï¼‰çš„å®é™…çŠ¶æ€ ç¬¬äºŒä¸ªå­—èŠ‚æ˜¯æ•´è½¦é€Ÿåº¦ï¼ˆ0ï¼šé€Ÿåº¦å°äº1m/s 1:é€Ÿåº¦å¤§äº1m/sï¼‰
             Motor_LB_State = (CAN_RxMessage.Data[0]) & 0x03;
             Motor_LF_State = (CAN_RxMessage.Data[0] >> 2) & 0x03;
             Motor_RB_State = (CAN_RxMessage.Data[0] >> 4) & 0x03;
@@ -419,9 +419,9 @@ void CAN1_RX0_IRQHandler(void)
             Motor_LOSE_Flag = 0;
             break;
 		
-		case 0x381:    //×ªÏòµç»ú±¨´í¼ì²â
-			Steering_ERROR = (CAN_RxMessage.Data[0]) &0x08; //×ªÏòµç»ú±¨´í¼ì²â
-			Steering_LOST_Flag = 0; //×ªÏòµç»úµôÏß¼ì²â
+		case 0x381:    //è½¬å‘ç”µæœºæŠ¥é”™æ£€æµ‹
+			Steering_ERROR = (CAN_RxMessage.Data[0]) &0x08; //è½¬å‘ç”µæœºæŠ¥é”™æ£€æµ‹
+			Steering_LOST_Flag = 0; //è½¬å‘ç”µæœºæ‰çº¿æ£€æµ‹
 			break;
 		
 	}
@@ -433,10 +433,10 @@ void CAN1_RX0_IRQHandler(void)
 	{
 		Motor_EN_State=0;
 	}
-	CAN_RxMessage.StdId=0x00; //»Ø¹é³õÊ¼×´Ì¬
+	CAN_RxMessage.StdId=0x00; //å›å½’åˆå§‹çŠ¶æ€
 }
 
-//-------------------ÓĞÈË´íÎó¼ì²â--------------------//
+//-------------------æœ‰äººé”™è¯¯æ£€æµ‹--------------------//
 void Man_ERROR_TEST(void)
 {
 	Motor_LOSE_Flag++;
@@ -447,10 +447,10 @@ void Man_ERROR_TEST(void)
 
 }
 
-//-------------------ÎŞÈË×´Ì¬´íÎó¼ì²â----------------//
+//-------------------æ— äººçŠ¶æ€é”™è¯¯æ£€æµ‹----------------//
 void AS_ERROR_Test(void)
 {
-	//---------µôÏß¼ì²â--------//	
+	//---------æ‰çº¿æ£€æµ‹--------//	
 		EBS_LOSE_Flag++;
 		ROS_LOSE_Flag++;
 		RES_LOSE_Flag++;
@@ -511,7 +511,7 @@ void AS_ERROR_Test(void)
 		}
 }
 
-//-------------------ASSI×´Ì¬ÏÔÊ¾--------------------//
+//-------------------ASSIçŠ¶æ€æ˜¾ç¤º--------------------//
 void ASSI_SHOW(void)
 {
 	switch(ASSI_State)
@@ -558,13 +558,13 @@ void ASSI_SHOW(void)
 			break;
 	}
 }	
-//-------------------ÎŞÈË·äÃùÆ÷----------------------//
+//-------------------æ— äººèœ‚é¸£å™¨----------------------//
 void AS_BEEP(void)
 {
-	//·äÃùÆ÷--ÎŞÈËÆô¶¯Óë½ô¼±ÖÆ¶¯ÃùµÑ//
+	//èœ‚é¸£å™¨--æ— äººå¯åŠ¨ä¸ç´§æ€¥åˆ¶åŠ¨é¸£ç¬›//
 	switch(Beep_ros)
 	{
-		case 0://Æô¶¯ÃùµÑ
+		case 0://å¯åŠ¨é¸£ç¬›
 			if(Beep_ros_count<150)
 			{
 				Beep_ros_count++;
@@ -581,7 +581,7 @@ void AS_BEEP(void)
 				Beep_flag=1;
 			}
 			break;
-		case 1://½ô¼±ÖÆ¶¯ÃùµÑ   10s+5Hz+0.5Õ¼¿Õ±È
+		case 1://ç´§æ€¥åˆ¶åŠ¨é¸£ç¬›   10s+5Hz+0.5å ç©ºæ¯”
 			if(Beep_ros_count<1000)
 			{
 				Beep_ros_count++;
@@ -600,14 +600,14 @@ void AS_BEEP(void)
 			break;
 	}
 }	
-//-------------------ÓĞÈË·äÃùÆ÷----------------------//
+//-------------------æœ‰äººèœ‚é¸£å™¨----------------------//
 void Man_BEEP(void)
 {
-		if(Man_State==2)//´ıÊ»×´Ì¬Ö´ĞĞ
+		if(Man_State==2)//å¾…é©¶çŠ¶æ€æ‰§è¡Œ
 		{
-			if(Beep_Once==0&&Motor_EN_State==1)//·äÃùÆ÷Î´Ö´ĞĞÇÒ¿ØÖÆÆ÷ÉÏÊ¹ÄÜ
+			if(Beep_Once==0&&Motor_EN_State==1)//èœ‚é¸£å™¨æœªæ‰§è¡Œä¸”æ§åˆ¶å™¨ä¸Šä½¿èƒ½
 			{
-				ToDriveFlag=1;//½øÈë´ıÊ»·äÃù
+				ToDriveFlag=1;//è¿›å…¥å¾…é©¶èœ‚é¸£
 				Beep_Once=1;
 			}
 		}
@@ -616,7 +616,7 @@ void Man_BEEP(void)
 			Beep_Once=0;
 		}
 		
-		/*·äÃùÆ÷--½øÈëÓĞÈË´ıÊ»Ä£Ê½*/
+		/*èœ‚é¸£å™¨--è¿›å…¥æœ‰äººå¾…é©¶æ¨¡å¼*/
 		if(ToDriveFlag&&Beep_man<=150)
 		{
 			Beep_man++;
@@ -626,50 +626,50 @@ void Man_BEEP(void)
 		{
 			Beep_man=0;
 			BEEP_OFF;
-			ToDriveFlag=0;//´ıÊ»·äÃùÍê³É
+			ToDriveFlag=0;//å¾…é©¶èœ‚é¸£å®Œæˆ
 		}
 }
 
 
-//------------------¿ØÖÆÆ÷ÉÏÊ¹ÄÜ-----------------------//
+//------------------æ§åˆ¶å™¨ä¸Šä½¿èƒ½-----------------------//
 void Motor_State(void)
 {
 	/*
-	ÒÔ×óÇ°ÎªÀı£º
-	LF_Enable_State£º
-	¢Ù0£º ¸ßÑ¹-->LF_State£º0   ÇëÇóÉÏÊ¹ÄÜ-->LF_State: 1   ³É¹¦Ê¹ÄÜ-->LF_State£º3
-	¢Ú1£º ±¨´í-->LF_State£º0   ¸´Î»³É¹¦(¸ßÑ¹×´Ì¬)-->LF_State: 1   ³É¹¦Ê¹ÄÜ-->LF_State£º3
+	ä»¥å·¦å‰ä¸ºä¾‹ï¼š
+	LF_Enable_Stateï¼š
+	â‘ 0ï¼š é«˜å‹-->LF_Stateï¼š0   è¯·æ±‚ä¸Šä½¿èƒ½-->LF_State: 1   æˆåŠŸä½¿èƒ½-->LF_Stateï¼š3
+	â‘¡1ï¼š æŠ¥é”™-->LF_Stateï¼š0   å¤ä½æˆåŠŸ(é«˜å‹çŠ¶æ€)-->LF_State: 1   æˆåŠŸä½¿èƒ½-->LF_Stateï¼š3
 	*/
-	//×óÇ°
+	//å·¦å‰
 	switch(LF_Enable_State)
 	{
-		case 0:						//Ä¬ÈÏÊÖ¶¯ÉÏÊ¹ÄÜ
-			LF_State=1;				//ÇëÇóÉÏÊ¹ÄÜ
+		case 0:						//é»˜è®¤æ‰‹åŠ¨ä¸Šä½¿èƒ½
+			LF_State=1;				//è¯·æ±‚ä¸Šä½¿èƒ½
 
-			if(Motor_LF_State==3)	//½ÓÊÕ³É¹¦ÉÏÊ¹ÄÜ
+			if(Motor_LF_State==3)	//æ¥æ”¶æˆåŠŸä¸Šä½¿èƒ½
 			{
-				LF_State=3;			//³É¹¦Ê¹ÄÜ
+				LF_State=3;			//æˆåŠŸä½¿èƒ½
 			}
 			
-			if(Motor_LF_State==2)	//½ÓÊÕ±¨´í
+			if(Motor_LF_State==2)	//æ¥æ”¶æŠ¥é”™
 			{
-				LF_Enable_State=1;	//ÒâÍâÉÏÊ¹ÄÜ
+				LF_Enable_State=1;	//æ„å¤–ä¸Šä½¿èƒ½
 			}
 			break;
 			
 		case 1:
-			LF_State=0;				//ÏÂÊ¹ÄÜ
-			if(Motor_LF_State==1)	//¿ØÖÆÆ÷ÉÏ¸ßÑ¹ºóÇëÇóÉÏÊ¹ÄÜ
+			LF_State=0;				//ä¸‹ä½¿èƒ½
+			if(Motor_LF_State==1)	//æ§åˆ¶å™¨ä¸Šé«˜å‹åè¯·æ±‚ä¸Šä½¿èƒ½
 			{
 				LF_State=1;			
 			}
-			if(Motor_LF_State==3)	//½ÓÊÕ³É¹¦ÉÏÊ¹ÄÜ
+			if(Motor_LF_State==3)	//æ¥æ”¶æˆåŠŸä¸Šä½¿èƒ½
 			{
-				LF_State=3;			//³É¹¦Ê¹ÄÜ
+				LF_State=3;			//æˆåŠŸä½¿èƒ½
 			}
 			break;
 	}
-	//×óºó
+	//å·¦å
 	switch(LB_Enable_State)
 	{
 		case 0:
@@ -698,7 +698,7 @@ void Motor_State(void)
 			}
 			break;
 	}
-	//ÓÒÇ°
+	//å³å‰
 	switch(RF_Enable_State)
 	{
 		case 0:
@@ -727,7 +727,7 @@ void Motor_State(void)
 			}
 			break;
 	}
-	//ÓÒºó
+	//å³å
 	switch(RB_Enable_State)
 	{
 		case 0:
@@ -757,7 +757,7 @@ void Motor_State(void)
 			break;
 	}
 }
-//-------------------¿ØÖÆÆ÷ÏÂÊ¹ÄÜ--------------------//
+//-------------------æ§åˆ¶å™¨ä¸‹ä½¿èƒ½--------------------//
 void Motor_State_Disable(void)
 {
 	LF_State=0;
@@ -770,12 +770,12 @@ void Motor_State_Disable(void)
 	RB_Enable_State=0;
 }
 
-//--------------------½ô¼±ÖÆ¶¯¼ì²â-------------------//
+//--------------------ç´§æ€¥åˆ¶åŠ¨æ£€æµ‹-------------------//
 void Emergency_Flag_Config(void)
 {
 	if(Emergency_Flag==0)
 	{
-		//µôÏßÅĞ¶Ï		
+		//æ‰çº¿åˆ¤æ–­		
 		if(Error_Flag&0x08)//ROS 0000 1000
 		{
 			Emergency_Flag = 1;
@@ -792,7 +792,7 @@ void Emergency_Flag_Config(void)
 		{
 			Emergency_Flag = 4;
 		}
-		//ÖÆ¶¯¼ì²â
+		//åˆ¶åŠ¨æ£€æµ‹
 		if(ROS_Statu_Flag == 6 )
 		{
 			Emergency_Flag = 5;

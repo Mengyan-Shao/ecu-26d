@@ -1,24 +1,24 @@
-#include "TIME.h"
+ï»¿#include "TIME.h"
 #include "stm32f10x.h"
 
 void TIME_Config(void)
 {		
-	//1M·ÖÆµ£¬Ã¿10ms½øÒ»´ÎÖĞ¶Ï
+	//1Måˆ†é¢‘ï¼Œæ¯10msè¿›ä¸€æ¬¡ä¸­æ–­
 	TIM_TimeBaseInitTypeDef 	TIM_TimeBaseInitStructure;
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);           //Ê¹ÄÜTIMÊ±ÖÓ
-	//------------------------------Ê±»ù»ú¹¹Ìå³õÊ¼»¯------------------------------/
-	TIM_TimeBaseInitStructure.TIM_Period = 10000-1; 	          //×Ô¶¯ÖØ×°ÔØÖµ
-	TIM_TimeBaseInitStructure.TIM_Prescaler=72-1;                 //¶¨Ê±Æ÷·ÖÆµ
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);           //ä½¿èƒ½TIMæ—¶é’Ÿ
+	//------------------------------æ—¶åŸºæœºæ„ä½“åˆå§‹åŒ–------------------------------/
+	TIM_TimeBaseInitStructure.TIM_Period = 10000-1; 	          //è‡ªåŠ¨é‡è£…è½½å€¼
+	TIM_TimeBaseInitStructure.TIM_Prescaler=72-1;                 //å®šæ—¶å™¨åˆ†é¢‘
 	TIM_ClearITPendingBit(TIM6,TIM_IT_Update);
-	TIM_TimeBaseInit(TIM6,&TIM_TimeBaseInitStructure);            //³õÊ¼»¯TIM
-	TIM_ITConfig(TIM6,TIM_IT_Update,ENABLE);                      //ÔÊĞí¶¨Ê±Æ÷¸üĞÂÖĞ¶Ï
-	TIM_Cmd(TIM6,ENABLE);  										  //Ê¹ÄÜ¶¨Ê±Æ÷
-	//----------------------¶¨Ê±ÖĞ¶Ï----------------------/	
+	TIM_TimeBaseInit(TIM6,&TIM_TimeBaseInitStructure);            //åˆå§‹åŒ–TIM
+	TIM_ITConfig(TIM6,TIM_IT_Update,ENABLE);                      //å…è®¸å®šæ—¶å™¨æ›´æ–°ä¸­æ–­
+	TIM_Cmd(TIM6,ENABLE);  										  //ä½¿èƒ½å®šæ—¶å™¨
+	//----------------------å®šæ—¶ä¸­æ–­----------------------/	
 	NVIC_InitTypeDef 			NVIC_InitStructure;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
-	NVIC_InitStructure.NVIC_IRQChannel=TIM6_IRQn;                 //¶¨Ê±Æ÷5ÖĞ¶Ï
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x00;    //ÇÀÕ¼ÓÅÏÈ¼¶1
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x00;           //×ÓÓÅÏÈ¼¶5
+	NVIC_InitStructure.NVIC_IRQChannel=TIM6_IRQn;                 //å®šæ—¶å™¨5ä¸­æ–­
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x00;    //æŠ¢å ä¼˜å…ˆçº§1
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x00;           //å­ä¼˜å…ˆçº§5
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 }

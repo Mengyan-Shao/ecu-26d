@@ -1,83 +1,83 @@
-#ifndef __FLAG_H
+ï»¿#ifndef __FLAG_H
 #define __FLAG_H
 
 #include "stm32f10x.h"
 #include "USART.h"
 
-/*-------------×Ü×´Ì¬Î»----------------*/
-extern uint8_t		 Statu_Flag;			//×´Ì¬±êÖ¾Î»£º0µÍÑ¹ 1ÓĞÈË¸ßÑ¹ 2ÎŞÈË¸ßÑ¹ 3ÎŞÈË×¼±¸(AS READY) 4ÎŞÈËĞĞÊ»(AS DRIVING) 5ÎŞÈËÍê³É(AS FINISHED) 6ÎŞÈËÖÆ¶¯(AS EMERGENCY)		
-extern uint8_t		 Match_Mode;			//±ÈÈüÄ£Ê½:		0ÓĞÈË  1Ö±Ïß¼ÓËÙA  	2×ªÏò±ê¶¨   3°Ë×ÖÈÆ»·  	 4¸ßËÙÑ­¼£A    5¸ßËÙÑ­¼£B     6ÖÆ¶¯²âÊÔ    7ÎŞÈË¼ì²é_¸ĞÖª  8µ÷ÊÔÄ£Ê½  9ÎŞÈË¼ì²é_µçÆø 10ÓĞÈËÂ¼°ü 11ÎŞÈËÒ£¿Ø
-extern uint8_t		 Error_Flag;			//´íÎóÔ´(0:´íÎó,1Õı³£)								
-extern uint8_t		 MODE_LOCK_Flag;		//Ä£Ê½Ëø¶¨±êÖ¾Î» 	0£º¿ÉÒÔ¸ü»»Ä£Ê½ 	1:Ëø¶¨Ä£Ê½£¨²»ÄÜĞŞ¸Ä£©
-extern uint32_t 	 time0;				//¼ÆÊ±time0  ÖĞ¶ÏÏµÍ³Ê±¼ä
-extern volatile uint8_t Tick_10ms;		//10ms½ÚÅÄ±êÖ¾£º¶¨Ê±Æ÷ÖĞ¶ÏÖÃ1£¬Ö÷Ñ­»·ÇåÁã
-extern uint8_t		 HUAHAI_LOSE_Flag;   //»ªº£´íÎó±êÖ¾Î»
-extern uint8_t		 HUAHAI_Enable;		//»ªº£Ê¹ÄÜ 	1ÓĞÈËÊ¹ÄÜ	2ÎŞÈËÊ¹ÄÜ
-extern uint8_t		 AMI_State;           //AMI±êÖ¾Î»:0:AS Off,1:AS Rrady,2:AS Driving,3:AS Finished,4:AS Emergency,5:Manual Driving
-extern uint16_t	 ReadyTime;			//×¼±¸×´Ì¬Ê±¼ä
+/*-------------æ€»çŠ¶æ€ä½----------------*/
+extern uint8_t		 Statu_Flag;			//çŠ¶æ€æ ‡å¿—ä½ï¼š0ä½å‹ 1æœ‰äººé«˜å‹ 2æ— äººé«˜å‹ 3æ— äººå‡†å¤‡(AS READY) 4æ— äººè¡Œé©¶(AS DRIVING) 5æ— äººå®Œæˆ(AS FINISHED) 6æ— äººåˆ¶åŠ¨(AS EMERGENCY)		
+extern uint8_t		 Match_Mode;			//æ¯”èµ›æ¨¡å¼:		0æœ‰äºº  1ç›´çº¿åŠ é€ŸA  	2è½¬å‘æ ‡å®š   3å…«å­—ç»•ç¯  	 4é«˜é€Ÿå¾ªè¿¹A    5é«˜é€Ÿå¾ªè¿¹B     6åˆ¶åŠ¨æµ‹è¯•    7æ— äººæ£€æŸ¥_æ„ŸçŸ¥  8è°ƒè¯•æ¨¡å¼  9æ— äººæ£€æŸ¥_ç”µæ°” 10æœ‰äººå½•åŒ… 11æ— äººé¥æ§
+extern uint8_t		 Error_Flag;			//é”™è¯¯æº(0:é”™è¯¯,1æ­£å¸¸)								
+extern uint8_t		 MODE_LOCK_Flag;		//æ¨¡å¼é”å®šæ ‡å¿—ä½ 	0ï¼šå¯ä»¥æ›´æ¢æ¨¡å¼ 	1:é”å®šæ¨¡å¼ï¼ˆä¸èƒ½ä¿®æ”¹ï¼‰
+extern uint32_t 	 time0;				//è®¡æ—¶time0  ä¸­æ–­ç³»ç»Ÿæ—¶é—´
+extern volatile uint8_t Tick_10ms;		//10msèŠ‚æ‹æ ‡å¿—ï¼šå®šæ—¶å™¨ä¸­æ–­ç½®1ï¼Œä¸»å¾ªç¯æ¸…é›¶
+extern uint8_t		 HUAHAI_LOSE_Flag;   //åæµ·é”™è¯¯æ ‡å¿—ä½
+extern uint8_t		 HUAHAI_Enable;		//åæµ·ä½¿èƒ½ 	1æœ‰äººä½¿èƒ½	2æ— äººä½¿èƒ½
+extern uint8_t		 AMI_State;           //AMIæ ‡å¿—ä½:0:AS Off,1:AS Rrady,2:AS Driving,3:AS Finished,4:AS Emergency,5:Manual Driving
+extern uint16_t	 ReadyTime;			//å‡†å¤‡çŠ¶æ€æ—¶é—´
 
-extern uint8_t		 Motor_EN_State;		//µç»úÊ¹ÄÜ×´Ì¬Î»£º0£ºµç»úÃ»ÓĞÊ¹ÄÜ	    1:µç»ú²»Ê¹ÄÜ
-extern uint8_t		 Motor_LOSE_Flag;		//µç»ú¿ØÖÆÆ÷´íÎó±êÖ¾Î»
+extern uint8_t		 Motor_EN_State;		//ç”µæœºä½¿èƒ½çŠ¶æ€ä½ï¼š0ï¼šç”µæœºæ²¡æœ‰ä½¿èƒ½	    1:ç”µæœºä¸ä½¿èƒ½
+extern uint8_t		 Motor_LOSE_Flag;		//ç”µæœºæ§åˆ¶å™¨é”™è¯¯æ ‡å¿—ä½
 
-extern uint8_t 	 Motor_LF_State;		//×óÇ°µç»úÊµ¼Ê×´Ì¬   0£ºµÍÑ¹ 1£º¸ßÑ¹ 2£º±¨´í 3£ºÊ¹ÄÜ
-extern uint8_t 	 Motor_LB_State;		//×óºóµç»úÊµ¼Ê×´Ì¬   0£ºµÍÑ¹ 1£º¸ßÑ¹ 2£º±¨´í 3£ºÊ¹ÄÜ
-extern uint8_t 	 Motor_RF_State;		//ÓÒÇ°µç»úÊµ¼Ê×´Ì¬   0£ºµÍÑ¹ 1£º¸ßÑ¹ 2£º±¨´í 3£ºÊ¹ÄÜ
-extern uint8_t 	 Motor_RB_State;		//ÓÒºóµç»úÊµ¼Ê×´Ì¬   0£ºµÍÑ¹ 1£º¸ßÑ¹ 2£º±¨´í 3£ºÊ¹ÄÜ
+extern uint8_t 	 Motor_LF_State;		//å·¦å‰ç”µæœºå®é™…çŠ¶æ€   0ï¼šä½å‹ 1ï¼šé«˜å‹ 2ï¼šæŠ¥é”™ 3ï¼šä½¿èƒ½
+extern uint8_t 	 Motor_LB_State;		//å·¦åç”µæœºå®é™…çŠ¶æ€   0ï¼šä½å‹ 1ï¼šé«˜å‹ 2ï¼šæŠ¥é”™ 3ï¼šä½¿èƒ½
+extern uint8_t 	 Motor_RF_State;		//å³å‰ç”µæœºå®é™…çŠ¶æ€   0ï¼šä½å‹ 1ï¼šé«˜å‹ 2ï¼šæŠ¥é”™ 3ï¼šä½¿èƒ½
+extern uint8_t 	 Motor_RB_State;		//å³åç”µæœºå®é™…çŠ¶æ€   0ï¼šä½å‹ 1ï¼šé«˜å‹ 2ï¼šæŠ¥é”™ 3ï¼šä½¿èƒ½
 
-extern uint8_t		 LF_Enable_State;		//×óÇ°Ê¹ÄÜÇé¿ö	 0£ºÊÖ¶¯ÉÏÊ¹ÄÜ  1£ºÒâÍâÉÏÊ¹ÄÜ
-extern uint8_t		 LF_State;			//×óÇ°¿ØÖÆÉÏÊ¹ÄÜ×´Ì¬Î»      0£ºÏÂÊ¹ÄÜ 1£ºÇëÇóÉÏÊ¹ÄÜ 3£º³É¹¦ÉÏÊ¹ÄÜ
-extern uint8_t		 LB_Enable_State;		//×óºóÊ¹ÄÜÇé¿ö	 0£ºÊÖ¶¯ÉÏÊ¹ÄÜ  1£ºÒâÍâÉÏÊ¹ÄÜ
-extern uint8_t		 LB_State;			//×óºó¿ØÖÆÉÏÊ¹ÄÜ×´Ì¬Î»
-extern uint8_t		 RF_Enable_State;		//ÓÒÇ°Ê¹ÄÜÇé¿ö	 0£ºÊÖ¶¯ÉÏÊ¹ÄÜ  1£ºÒâÍâÉÏÊ¹ÄÜ
-extern uint8_t		 RF_State;			//ÓÒÇ°¿ØÖÆÉÏÊ¹ÄÜ×´Ì¬Î»
-extern uint8_t		 RB_Enable_State;		//ÓÒºóÊ¹ÄÜÇé¿ö	 0£ºÊÖ¶¯ÉÏÊ¹ÄÜ  1£ºÒâÍâÉÏÊ¹ÄÜ
-extern uint8_t		 RB_State;			//ÓÒºó¿ØÖÆÉÏÊ¹ÄÜ×´Ì¬Î»
+extern uint8_t		 LF_Enable_State;		//å·¦å‰ä½¿èƒ½æƒ…å†µ	 0ï¼šæ‰‹åŠ¨ä¸Šä½¿èƒ½  1ï¼šæ„å¤–ä¸Šä½¿èƒ½
+extern uint8_t		 LF_State;			//å·¦å‰æ§åˆ¶ä¸Šä½¿èƒ½çŠ¶æ€ä½      0ï¼šä¸‹ä½¿èƒ½ 1ï¼šè¯·æ±‚ä¸Šä½¿èƒ½ 3ï¼šæˆåŠŸä¸Šä½¿èƒ½
+extern uint8_t		 LB_Enable_State;		//å·¦åä½¿èƒ½æƒ…å†µ	 0ï¼šæ‰‹åŠ¨ä¸Šä½¿èƒ½  1ï¼šæ„å¤–ä¸Šä½¿èƒ½
+extern uint8_t		 LB_State;			//å·¦åæ§åˆ¶ä¸Šä½¿èƒ½çŠ¶æ€ä½
+extern uint8_t		 RF_Enable_State;		//å³å‰ä½¿èƒ½æƒ…å†µ	 0ï¼šæ‰‹åŠ¨ä¸Šä½¿èƒ½  1ï¼šæ„å¤–ä¸Šä½¿èƒ½
+extern uint8_t		 RF_State;			//å³å‰æ§åˆ¶ä¸Šä½¿èƒ½çŠ¶æ€ä½
+extern uint8_t		 RB_Enable_State;		//å³åä½¿èƒ½æƒ…å†µ	 0ï¼šæ‰‹åŠ¨ä¸Šä½¿èƒ½  1ï¼šæ„å¤–ä¸Šä½¿èƒ½
+extern uint8_t		 RB_State;			//å³åæ§åˆ¶ä¸Šä½¿èƒ½çŠ¶æ€ä½
 
-//-------------ÓĞÈË×´Ì¬Î»------------
-extern uint8_t		 Man_State;			//ÓĞÈËÄ£Ê½×´Ì¬	0£ºµÍÑ¹ 1£ºÓĞÈË¸ßÑ¹ 2£ºÓĞÈË´ıÊ»
-extern uint8_t 	 ToDriveFlag;		    //´ıÊ»Ä£Ê½±êÖ¾Î» 1:½øÈë´ıÊ»Ä£Ê½,µç»ú¿É¶Ô¼ÓËÙÌ¤°å×ö³öÏìÓ¦	
-extern uint16_t	 Beep_man;			//ÓĞÈË´ıÊ»·äÃùÆ÷¼ÆÊı
-extern uint8_t 	 Beep_Once;			//Ö»Ê¹ÄÜÒ»´Î±êÖ¾Î»
-extern uint8_t		 Brake_Flag;          //0£ºÓÍÑ¹Ğ¡ÓÚ1500 1£ºÓÍÑ¹´óÓÚµÈÓÚ1500	
-extern uint8_t      KeyFlag;            //Ê¹ÄÜ°´¼üÈ·ÈÏÎ» 1:Ê¹ÄÜ°´¼üÒÑ±»°´ÏÂ 0£ºÎ´°´ÏÂ»òÒÑ¸üĞÂ±ÈÈüÄ£Ê½
-extern uint16_t	 Key_Time;			//Ê¹ÄÜ°´Å¥¼ì²â
-extern uint8_t		 ModeFlag;		    //0£ºÔÊĞí¼ì²â°´¼ü 1£ºÕıÔÚ´¦Àí°´¼ü£¬·ÀÖ¹ÖØ¸´´¥·¢
-extern uint16_t	 Brake_Time;		    //²ÈÌ¤°å¼ì²â
+//-------------æœ‰äººçŠ¶æ€ä½------------
+extern uint8_t		 Man_State;			//æœ‰äººæ¨¡å¼çŠ¶æ€	0ï¼šä½å‹ 1ï¼šæœ‰äººé«˜å‹ 2ï¼šæœ‰äººå¾…é©¶
+extern uint8_t 	 ToDriveFlag;		    //å¾…é©¶æ¨¡å¼æ ‡å¿—ä½ 1:è¿›å…¥å¾…é©¶æ¨¡å¼,ç”µæœºå¯å¯¹åŠ é€Ÿè¸æ¿åšå‡ºå“åº”	
+extern uint16_t	 Beep_man;			//æœ‰äººå¾…é©¶èœ‚é¸£å™¨è®¡æ•°
+extern uint8_t 	 Beep_Once;			//åªä½¿èƒ½ä¸€æ¬¡æ ‡å¿—ä½
+extern uint8_t		 Brake_Flag;          //0ï¼šæ²¹å‹å°äº1500 1ï¼šæ²¹å‹å¤§äºç­‰äº1500	
+extern uint8_t      KeyFlag;            //ä½¿èƒ½æŒ‰é”®ç¡®è®¤ä½ 1:ä½¿èƒ½æŒ‰é”®å·²è¢«æŒ‰ä¸‹ 0ï¼šæœªæŒ‰ä¸‹æˆ–å·²æ›´æ–°æ¯”èµ›æ¨¡å¼
+extern uint16_t	 Key_Time;			//ä½¿èƒ½æŒ‰é’®æ£€æµ‹
+extern uint8_t		 ModeFlag;		    //0ï¼šå…è®¸æ£€æµ‹æŒ‰é”® 1ï¼šæ­£åœ¨å¤„ç†æŒ‰é”®ï¼Œé˜²æ­¢é‡å¤è§¦å‘
+extern uint16_t	 Brake_Time;		    //è¸©è¸æ¿æ£€æµ‹
 
-//-------------ÎŞÈË×´Ì¬Î»------------
-extern uint8_t      EBS_Ready;           //EBS×¼±¸£º0 Î´×¼±¸ºÃ 1 ×¼±¸ºÃ
-extern uint8_t		 EBS_State;			//EBS×´Ì¬£º6½ô¼±ÖÆ¶¯
-extern uint16_t	 EBS_LOSE_Flag;	    //EBS´íÎó±êÖ¾Î»
-extern uint8_t		 RES_State;			//RES×´Ì¬£º0¼±Í£ 4×¼±¸ 5GO
-extern uint16_t	 RES_LOSE_Flag;	    //RES´íÎó±êÖ¾Î»
-extern uint8_t		 Beep_ros;			//Æô¶¯ÃùµÑÎª0¡¢ÖÆ¶¯ÃùµÑÎª1£¬Ä¬ÈÏÖµÎª3
-extern uint16_t	 Beep_ros_count;		//·äÃùÊ±¼ä¼ÆÊı
-extern uint16_t	 ROS_LOSE_Flag;		//ROS´íÎóÎ»
-extern uint16_t	 Yellowcount;			//YellowFlash¼ÆÊ±
-extern uint16_t	 Bluecount;			//BlueFlash¼ÆÊ±
-extern uint8_t		 ASSI_State;          //0¹Ø±Õ,1»ÆµÆ³£ÁÁ,2»ÆµÆÉÁË¸,3À¶µÆ³£ÁÁ,4À¶µÆÉÁË¸
-extern uint8_t		 ROS_Statu_Flag;		//½ÓÊÕ¹¤×÷Õ¾×´Ì¬Î»  ´Ó 1 ¿ªÊ¼
-extern uint8_t      Motor_Speed;		    //Õû³µËÙ¶È(ÒÔ×óºóµç»ú×÷Îª´ú±í) 0ÎªËÙ¶ÈĞ¡ÓÚ1m/s£¨Í£³µ£© 1ÎªËÙ¶È´óÓÚ1m/s£¨ĞĞÊ»£©
-extern uint8_t		 Emergency_Flag;		//Ëø¶¨×îÏÈ½øÈë½ô¼±ÖÆ¶¯µÄ×´Ì¬ 0£ºÃ»µôÏß 1£ºROSµôÏß 2£ºRESµôÏß 3£ºEBSµôÏß 
-extern uint8_t      Lose_Time;           //Éè±¸µôÏßÊ±¼ä  Emergency_Flag!=0Ê±£¬Lose_Time¿ªÊ¼¼ÆÊ±£¬×î¶àÖÁ255(2.55s)
-extern uint16_t     Time_Ready;		    //¹¤×÷Õ¾Íê³É¼ÆÊı
-extern uint8_t      RES_GO;				//½øÈëAS Driving·äÃùÍê³Éºó´Ë±êÖ¾Î»¼Ç1
-extern uint8_t      Beep_flag;			//·äÃùÆ÷±êÖ¾Î»  0£º¹¤×÷ÖĞ 1: ÒÑÍê³É·äÃù
+//-------------æ— äººçŠ¶æ€ä½------------
+extern uint8_t      EBS_Ready;           //EBSå‡†å¤‡ï¼š0 æœªå‡†å¤‡å¥½ 1 å‡†å¤‡å¥½
+extern uint8_t		 EBS_State;			//EBSçŠ¶æ€ï¼š6ç´§æ€¥åˆ¶åŠ¨
+extern uint16_t	 EBS_LOSE_Flag;	    //EBSé”™è¯¯æ ‡å¿—ä½
+extern uint8_t		 RES_State;			//RESçŠ¶æ€ï¼š0æ€¥åœ 4å‡†å¤‡ 5GO
+extern uint16_t	 RES_LOSE_Flag;	    //RESé”™è¯¯æ ‡å¿—ä½
+extern uint8_t		 Beep_ros;			//å¯åŠ¨é¸£ç¬›ä¸º0ã€åˆ¶åŠ¨é¸£ç¬›ä¸º1ï¼Œé»˜è®¤å€¼ä¸º3
+extern uint16_t	 Beep_ros_count;		//èœ‚é¸£æ—¶é—´è®¡æ•°
+extern uint16_t	 ROS_LOSE_Flag;		//ROSé”™è¯¯ä½
+extern uint16_t	 Yellowcount;			//YellowFlashè®¡æ—¶
+extern uint16_t	 Bluecount;			//BlueFlashè®¡æ—¶
+extern uint8_t		 ASSI_State;          //0å…³é—­,1é»„ç¯å¸¸äº®,2é»„ç¯é—ªçƒ,3è“ç¯å¸¸äº®,4è“ç¯é—ªçƒ
+extern uint8_t		 ROS_Statu_Flag;		//æ¥æ”¶å·¥ä½œç«™çŠ¶æ€ä½  ä» 1 å¼€å§‹
+extern uint8_t      Motor_Speed;		    //æ•´è½¦é€Ÿåº¦(ä»¥å·¦åç”µæœºä½œä¸ºä»£è¡¨) 0ä¸ºé€Ÿåº¦å°äº1m/sï¼ˆåœè½¦ï¼‰ 1ä¸ºé€Ÿåº¦å¤§äº1m/sï¼ˆè¡Œé©¶ï¼‰
+extern uint8_t		 Emergency_Flag;		//é”å®šæœ€å…ˆè¿›å…¥ç´§æ€¥åˆ¶åŠ¨çš„çŠ¶æ€ 0ï¼šæ²¡æ‰çº¿ 1ï¼šROSæ‰çº¿ 2ï¼šRESæ‰çº¿ 3ï¼šEBSæ‰çº¿ 
+extern uint8_t      Lose_Time;           //è®¾å¤‡æ‰çº¿æ—¶é—´  Emergency_Flag!=0æ—¶ï¼ŒLose_Timeå¼€å§‹è®¡æ—¶ï¼Œæœ€å¤šè‡³255(2.55s)
+extern uint16_t     Time_Ready;		    //å·¥ä½œç«™å®Œæˆè®¡æ•°
+extern uint8_t      RES_GO;				//è¿›å…¥AS Drivingèœ‚é¸£å®Œæˆåæ­¤æ ‡å¿—ä½è®°1
+extern uint8_t      Beep_flag;			//èœ‚é¸£å™¨æ ‡å¿—ä½  0ï¼šå·¥ä½œä¸­ 1: å·²å®Œæˆèœ‚é¸£
 extern uint8_t		 RES_LOST;
 extern uint8_t      Steering_ERROR;  
 extern uint16_t     Steering_LOST_Flag;
 
-//---------------EBSÓÍÑ¹£¨×óÇ°£©----------------
-extern uint16_t   			EBS_Oilh;   //ÓÍÑ¹Êı¾İÊÇÁ½¸ö×Ö½Ú µ«CANÒ»´ÎÖ»ÄÜ·¢Ò»¸ö×Ö½Ú ²ğ³ÉÁ½¸ö¸ßºÍµÍÁ½¸ö×Ö½ÚÔÙ×éºÏÔÚÒ»Æğ
+//---------------EBSæ²¹å‹ï¼ˆå·¦å‰ï¼‰----------------
+extern uint16_t   			EBS_Oilh;   //æ²¹å‹æ•°æ®æ˜¯ä¸¤ä¸ªå­—èŠ‚ ä½†CANä¸€æ¬¡åªèƒ½å‘ä¸€ä¸ªå­—èŠ‚ æ‹†æˆä¸¤ä¸ªé«˜å’Œä½ä¸¤ä¸ªå­—èŠ‚å†ç»„åˆåœ¨ä¸€èµ·
 extern uint16_t    		EBS_Oill;
 extern uint16_t 			EBS_Oil;
 
-//---------------EBSÆøÑ¹£¨×óÇ°£©----------------
-extern uint16_t 			EBS_AirH;	//ÆøÑ¹Êı¾İÊÇÁ½¸ö×Ö½Ú µ«CANÒ»´ÎÖ»ÄÜ·¢Ò»¸ö×Ö½Ú ²ğ³ÉÁ½¸ö¸ßºÍµÍÁ½¸ö×Ö½ÚÔÙ×éºÏÔÚÒ»Æğ
+//---------------EBSæ°”å‹ï¼ˆå·¦å‰ï¼‰----------------
+extern uint16_t 			EBS_AirH;	//æ°”å‹æ•°æ®æ˜¯ä¸¤ä¸ªå­—èŠ‚ ä½†CANä¸€æ¬¡åªèƒ½å‘ä¸€ä¸ªå­—èŠ‚ æ‹†æˆä¸¤ä¸ªé«˜å’Œä½ä¸¤ä¸ªå­—èŠ‚å†ç»„åˆåœ¨ä¸€èµ·
 extern uint16_t 			EBS_AirL;
 extern uint16_t 			EBS_Air;
 
-//Ò£¿ØÆ÷
+//é¥æ§å™¨
 extern CarControl_t SBUS;
 
 #endif

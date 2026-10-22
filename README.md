@@ -41,6 +41,8 @@ ECU20263.1/
 
 > 编译产物（`Objects/`、`Listings/`）和 Keil 个人配置（`*.uvoptx`、`*.uvguix.*`）已在 `.gitignore` 中排除，克隆后需重新编译。
 
+> 仓库内源码统一为 **UTF-8（带 BOM）**。若在 Keil 中打开中文注释显示为乱码，把 `Edit → Configuration → Editor → Encoding` 改成 `UTF-8` 即可。
+
 ## 文档
 
 - [遥控器使用说明（SBUS）](遥控器.md)
